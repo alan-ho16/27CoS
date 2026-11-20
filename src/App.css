@@ -6,15 +6,15 @@ body {
   /* fetching background image, making sure it is one whole image that covers the screen */
   background-image: url('/levels_of_inferno.png');
   background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  background-position: center center;
+  background-size: contain;
+  background-color: #0b090a;
 
   width: 100vw;
   min-height: 100vh;
   box-sizing: border-box;
-  padding: 1rem;
-  padding-left: 3rem;
   font-family: sans-serif;
+  padding: 2rem;
 
   /* Center the inner menu/form on screen */
   display: flex;
