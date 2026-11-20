@@ -1,0 +1,100 @@
+erDiagram
+    USER {
+        int user_id PK
+        string username
+        string password_hash
+    }
+
+    GAME_SESSION {
+        int session_id PK
+        int user_id FK
+        int current_level
+        int current_room
+        boolean is_active
+    }
+
+    PLAYER_STATE {
+        int player_id PK
+        int session_id FK
+        int current_hp
+        int max_hp
+        int defense
+        int intelligence
+        int speed
+        int flee_penalty
+    }
+
+    ITEM_TEMPLATE {
+        int item_id PK
+        string name
+        string description
+        string item_type
+        int rarity
+        int element_id FK
+        jsonb stat_modifiers
+        int turn_duration
+    }
+
+    INVENTORY {
+        int inventory_id PK
+        int player_id FK
+        int item_template_id FK
+        boolean is_equipped
+        int quantity
+    }
+
+    MONSTER_TEMPLATE {
+        int monster_id PK
+        string name
+        string description
+        int base_hp
+        int base_def
+        int base_int
+        int base_speed
+        int element_id FK
+        jsonb definite_drops
+    }
+
+    DUNGEON_ENCOUNTER {
+        int encounter_id PK
+        int session_id FK
+        int monster_template_id FK
+        int current_hp
+        int modified_def
+        int modified_speed
+        int treasure_box_rarity
+    }
+
+    COMBAT_STATE {
+        int combat_id PK
+        int session_id FK
+        int encounter_id FK
+        jsonb active_player_buffs
+        jsonb active_monster_debuffs
+        jsonb monster_charge_status
+    }
+
+    ELEMENT {
+        int element_id PK
+        string name
+    }
+
+    ELEMENT_MULTIPLIER_MATRIX {
+        int attacker_element_id FK
+        int defender_element_id FK
+        float multiplier
+    }
+
+    %% Relationships
+    USER ||--o{ GAME_SESSION : "creates"
+    GAME_SESSION ||--|| PLAYER_STATE : "has (1-to-1)"
+    GAME_SESSION ||--o{ DUNGEON_ENCOUNTER : "contains"
+    GAME_SESSION ||--o| COMBAT_STATE : "tracks current"
+    PLAYER_STATE ||--o{ INVENTORY : "holds"
+    INVENTORY }o--|| ITEM_TEMPLATE : "references"
+    ITEM_TEMPLATE }o--o| ELEMENT : "has affinity"
+    DUNGEON_ENCOUNTER }o--|| MONSTER_TEMPLATE : "spawns from"
+    DUNGEON_ENCOUNTER ||--o| COMBAT_STATE : "monitored in"
+    MONSTER_TEMPLATE }o--|| ELEMENT : "has affinity"
+    ELEMENT ||--o{ ELEMENT_MULTIPLIER_MATRIX : "acts as attacker"
+    ELEMENT ||--o{ ELEMENT_MULTIPLIER_MATRIX : "acts as defender"
