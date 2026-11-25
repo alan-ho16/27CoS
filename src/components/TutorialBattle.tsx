@@ -7,12 +7,12 @@ import {
 import styles from './TutorialBattle.module.css';
 
 interface TutorialBattleProps {
-  onTutorialBattle: () => void;
+  onExit: () => void;
 }
 
 type BattleMenuMode = 'main' | 'gear';
 
-export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
+export function TutorialBattle({ onExit }: TutorialBattleProps) {
   //tutorial player's stats (only used for reference, more complex in actual game)
   const basePlayerAttack = 3;
   const maxPlayerHp = 30;
@@ -194,7 +194,7 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
                   type="button"
                   className={styles.pokeBtn}
                   style={{ gridColumn: 'span 2' }}
-                  onClick={onTutorialBattle}
+                  onClick={onExit}
                 >
                   ▶ CONTINUE
                 </button>
@@ -206,7 +206,7 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
                   <button
                     type="button"
                     className={styles.pokeBtn}
-                    onClick={onTutorialBattle}
+                    onClick={onExit}
                   >
                     ▶ MENU
                   </button>
@@ -243,7 +243,7 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
                 type="button"
                 className={styles.pokeBtn}
                 style={{ borderColor: '#6c757d' }}
-                onClick={onTutorialBattle}
+                onClick={onExit}
               >
                 RUN
               </button>

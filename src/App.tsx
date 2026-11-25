@@ -109,7 +109,7 @@ export default function App() {
 
       {/* NEW GAME / TUTORIAL SCREEN */}
       {currentScreen === 'tutorial' && (
-        <TutorialBattle onTutorialBattle={() => setCurrentScreen('menu')} />
+        <TutorialBattle onExit={() => setCurrentScreen('menu')} />
       )}
     </div>
   );
