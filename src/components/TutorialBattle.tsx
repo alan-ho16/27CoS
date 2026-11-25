@@ -13,9 +13,10 @@ interface TutorialBattleProps {
 type BattleMenuMode = 'main' | 'gear';
 
 export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
+  //tutorial player's stats (only used for reference, more complex in actual game)
   const basePlayerAttack = 3;
   const maxPlayerHp = 30;
-  const maxSlots = 2;
+  const maxSlots = 2; // will be set to 20 in actual game
 
   const [playerHp, setPlayerHp] = useState(maxPlayerHp);
   const [bossHp, setBossHp] = useState(TUTORIAL_BOSS.maxHp);
@@ -25,6 +26,7 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
   const [menuMode, setMenuMode] = useState<BattleMenuMode>('main');
   const [message, setMessage] = useState<string>(TUTORIAL_BOSS.introText);
 
+  //helper functions to calculate the stat bonuses from all equipped items
   const totalAttackBonus = equipped.reduce(
     (sum, item) => sum + item.attackBonus,
     0,
@@ -33,6 +35,8 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
     (sum, item) => sum + item.defenseBonus,
     0,
   );
+
+  //Uses timed messages for Hubbob's healing.
   const messageTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const showTimedMessage = (
@@ -62,10 +66,13 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
       }
     };
   }, []);
+
+  // ends battle if hp reaches 0
   const isVictory = bossHp <= 0;
   const isDefeat = playerHp <= 0;
   const battleOver = isVictory || isDefeat;
 
+  // tutorial battle only -- one "turn" consists of attack and getting attacked
   const handleFight = () => {
     if (battleOver) return;
 
@@ -88,6 +95,8 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
       `You hit for ${playerDamage} dmg! ${TUTORIAL_BOSS.name} hit back for ${bossDamage} dmg!`,
     );
   };
+  // tutorial battle only -- equipping items can be done mid-battle
+  // equipping items don't require a turn
 
   const handleToggleEquip = (item: Equipment) => {
     const isAlreadyEquipped = equipped.some((e) => e.name === item.name);
@@ -105,6 +114,7 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
     }
   };
 
+  // Healing takes up a "turn" -- boss heals to full as well.
   const handleHeal = () => {
     if (battleOver) return;
     const healAmount = 10;
@@ -181,6 +191,7 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
             <div className={styles.grid2x2}>
               {isVictory ? (
                 <button
+                  type="button"
                   className={styles.pokeBtn}
                   style={{ gridColumn: 'span 2' }}
                   onClick={onTutorialBattle}
@@ -192,7 +203,11 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
                   <button className={styles.pokeBtn} onClick={handleRetry}>
                     ▶ RETRY
                   </button>
-                  <button className={styles.pokeBtn} onClick={onTutorialBattle}>
+                  <button
+                    type="button"
+                    className={styles.pokeBtn}
+                    onClick={onTutorialBattle}
+                  >
                     ▶ MENU
                   </button>
                 </>
@@ -201,6 +216,7 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
           ) : menuMode === 'main' ? (
             <div className={styles.grid2x2}>
               <button
+                type="button"
                 className={styles.pokeBtn}
                 style={{ borderColor: '#e63946' }}
                 onClick={handleFight}
@@ -208,6 +224,7 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
                 FIGHT
               </button>
               <button
+                type="button"
                 className={styles.pokeBtn}
                 style={{ borderColor: '#457b9d' }}
                 onClick={() => setMenuMode('gear')}
@@ -215,6 +232,7 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
                 GEAR ({equipped.length}/{maxSlots})
               </button>
               <button
+                type="button"
                 className={styles.pokeBtn}
                 style={{ borderColor: '#2a9d8f' }}
                 onClick={handleHeal}
@@ -222,6 +240,7 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
                 TOWEL (HEAL)
               </button>
               <button
+                type="button"
                 className={styles.pokeBtn}
                 style={{ borderColor: '#6c757d' }}
                 onClick={onTutorialBattle}
@@ -235,6 +254,7 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
                 const isEquipped = equipped.some((e) => e.name === item.name);
                 return (
                   <button
+                    type="button"
                     key={item.name}
                     className={`${styles.pokeBtn} ${styles.gearBtn} ${
                       isEquipped ? styles.equippedBtn : ''
@@ -264,6 +284,7 @@ export function TutorialBattle({ onTutorialBattle }: TutorialBattleProps) {
                 );
               })}
               <button
+                type="button"
                 className={`${styles.pokeBtn} ${styles.backBtn}`}
                 onClick={() => setMenuMode('main')}
               >
