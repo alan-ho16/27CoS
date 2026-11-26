@@ -91,6 +91,12 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
     const bossDamage = Math.max(1, TUTORIAL_BOSS.attack - totalDefenseBonus);
     const nextPlayerHp = Math.max(0, playerHp - bossDamage);
     setPlayerHp(nextPlayerHp);
+    if (nextPlayerHp === 0) {
+      setMessage(
+        'You got smacked by Hubbob and fainted! He scoffs, steals a few warm towels, and leaves.',
+      );
+      return;
+    }
 
     setMessage(
       `You hit for ${playerDamage} dmg! ${TUTORIAL_BOSS.name} hit back for ${bossDamage} dmg!`,

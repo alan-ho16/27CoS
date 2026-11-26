@@ -1,3 +1,6 @@
+//Data used solely for the tutorial battle
+//There will be more statistics (rows in equipment/boss interface)
+
 export interface Equipment {
   name: string;
   attackBonus: number;

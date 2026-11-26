@@ -113,7 +113,6 @@
     background-color 0.15s ease;
 }
 
-/* Bonus: Real CSS hover and click feedback! */
 .pokeBtn:hover {
   background-color: #f1f5f9;
 }
