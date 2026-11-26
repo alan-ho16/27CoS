@@ -22,7 +22,9 @@ export default function App() {
   };
 
   return (
-    <div className="app-container">
+    <div
+      className={`app-container ${currentScreen !== 'tutorial' ? 'menu-view' : ''}`}
+    >
       {/* MAIN MENU */}
       {currentScreen === 'menu' && (
         <div className="screen-stack">

@@ -10,7 +10,7 @@ body {
   background-size: contain;
   background-color: #0b090a;
 
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
   font-family: sans-serif;
@@ -18,13 +18,19 @@ body {
 
   /* Center the inner menu/form on screen */
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: center;
 
   h1 {
-    color: black;
+    color: #f8f9fa;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   }
+}
+
+.app-container.menu-view {
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .screen-stack {
@@ -45,5 +51,6 @@ body {
 }
 
 .welcome-message {
-  color: black;
+  color: #f8f9fa;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
 }
