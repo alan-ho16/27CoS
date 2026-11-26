@@ -54,23 +54,3 @@ body {
   color: #f8f9fa;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
 }
-
-.continueBtn {
-  grid-column: span 2;
-}
-
-.fightBtn {
-  border-color: #e63946;
-}
-
-.gearMenuBtn {
-  border-color: #457b9d;
-}
-
-.healBtn {
-  border-color: #2a9d8f;
-}
-
-.runBtn {
-  border-color: #6c757d;
-}
