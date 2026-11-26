@@ -141,6 +141,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
       },
     );
   };
+
   const handleRetry = () => {
     if (messageTimeoutRef.current) {
       clearTimeout(messageTimeoutRef.current);
@@ -151,6 +152,27 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
     setBossHp(TUTORIAL_BOSS.maxHp);
     setMenuMode('main');
     setMessage(TUTORIAL_BOSS.introText);
+  };
+
+  {
+    /* Makes item equip status and stat bonuses look pretty
+  If equipped, there is a star, removes star if not equipped/unequipped
+  Stat bonuses --- removes stat (etc. DEF) if bonus = 0, adds + or - if not 0*/
+  }
+  const formatEquipmentLabel = (
+    item: Equipment,
+    isEquipped: boolean,
+  ): string => {
+    const stats = [
+      item.attackBonus !== 0 &&
+        `${item.attackBonus > 0 ? `+${item.attackBonus}` : item.attackBonus}A`,
+      item.defenseBonus !== 0 &&
+        `${item.defenseBonus > 0 ? `+${item.defenseBonus}` : item.defenseBonus}D`,
+    ].filter(Boolean);
+
+    const prefix = isEquipped ? '★ ' : '';
+    const suffix = stats.length > 0 ? ` (${stats.join(' / ')})` : '';
+    return `${prefix}${item.name}${suffix}`;
   };
 
   const bossHpPercent = (bossHp / TUTORIAL_BOSS.maxHp) * 100;
@@ -206,8 +228,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
               {isVictory ? (
                 <button
                   type="button"
-                  className={styles.pokeBtn}
-                  style={{ gridColumn: 'span 2' }}
+                  className={`${styles.pokeBtn} ${styles.continueBtn}`}
                   onClick={onExit}
                 >
                   ▶ CONTINUE
@@ -235,8 +256,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
             <div className={styles.grid2x2}>
               <button
                 type="button"
-                className={styles.pokeBtn}
-                style={{ borderColor: '#e63946' }}
+                className={`${styles.pokeBtn} ${styles.fightBtn}`}
                 disabled={isBusy}
                 onClick={handleFight}
               >
@@ -244,8 +264,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
               </button>
               <button
                 type="button"
-                className={styles.pokeBtn}
-                style={{ borderColor: '#457b9d' }}
+                className={`${styles.pokeBtn} ${styles.gearBtn}`}
                 onClick={() => setMenuMode('gear')}
                 disabled={isBusy}
               >
@@ -253,8 +272,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
               </button>
               <button
                 type="button"
-                className={styles.pokeBtn}
-                style={{ borderColor: '#2a9d8f' }}
+                className={`${styles.pokeBtn} ${styles.healBtn}`}
                 disabled={isBusy}
                 onClick={handleHeal}
               >
@@ -262,8 +280,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
               </button>
               <button
                 type="button"
-                className={styles.pokeBtn}
-                style={{ borderColor: '#6c757d' }}
+                className={`${styles.pokeBtn} ${styles.runBtn}`}
                 disabled={isBusy}
                 onClick={onExit}
               >
@@ -284,28 +301,11 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
                     }`}
                     onClick={() => handleToggleEquip(item)}
                   >
-                    {/* Makes item equip status and stat bonuses look pretty
-                    If equipped, there is a star, removes star if not equipped/unequipped
-                    Stat bonuses --- removes stat (etc. DEF) if bonus = 0, adds + or - if not 0*/}
-                    {isEquipped ? '★ ' : ''}
-                    {(() => {
-                      const stats = [
-                        item.attackBonus !== 0 &&
-                          `${item.attackBonus > 0 ? `+${item.attackBonus}` : item.attackBonus}A`,
-                        item.defenseBonus !== 0 &&
-                          `${item.defenseBonus > 0 ? `+${item.defenseBonus}` : item.defenseBonus}D`,
-                      ].filter(Boolean);
-
-                      return (
-                        <>
-                          {item.name}
-                          {stats.length > 0 && ` (${stats.join(' / ')})`}
-                        </>
-                      );
-                    })()}
+                    {formatEquipmentLabel(item, isEquipped)}
                   </button>
                 );
               })}
+
               <button
                 type="button"
                 className={`${styles.pokeBtn} ${styles.backBtn}`}

@@ -138,3 +138,23 @@
   background: #eee;
   font-size: 0.8rem;
 }
+
+.continueBtn {
+  grid-column: span 2;
+}
+
+.fightBtn {
+  border-color: #e63946;
+}
+
+.gearMenuBtn {
+  border-color: #457b9d;
+}
+
+.healBtn {
+  border-color: #2a9d8f;
+}
+
+.runBtn {
+  border-color: #6c757d;
+}
