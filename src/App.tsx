@@ -12,9 +12,10 @@ export default function App() {
 
   const handleAuthSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
-    if (!username.trim()) return;
+    const trimmedUsername = username.trim();
+    if (!trimmedUsername) return;
 
-    setLoggedInUser(username);
+    setLoggedInUser(trimmedUsername);
     setUsername('');
     setPassword('');
     setCurrentScreen('menu');

@@ -25,7 +25,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
   ]);
   const [menuMode, setMenuMode] = useState<BattleMenuMode>('main');
   const [message, setMessage] = useState<string>(TUTORIAL_BOSS.introText);
-
+  const [isBusy, setIsBusy] = useState(false);
   //helper functions to calculate the stat bonuses from all equipped items
   const totalAttackBonus = equipped.reduce(
     (sum, item) => sum + item.attackBonus,
@@ -47,10 +47,11 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
     if (messageTimeoutRef.current) {
       clearTimeout(messageTimeoutRef.current);
     }
-
+    setIsBusy(true);
     setMessage(text);
     messageTimeoutRef.current = setTimeout(() => {
       messageTimeoutRef.current = null;
+      setIsBusy(false);
       if (onComplete) {
         onComplete();
       } else {
@@ -74,7 +75,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
 
   // tutorial battle only -- one "turn" consists of attack and getting attacked
   const handleFight = () => {
-    if (battleOver) return;
+    if (battleOver || isBusy) return;
 
     const playerDamage = Math.max(1, basePlayerAttack + totalAttackBonus);
     const nextBossHp = Math.max(0, bossHp - playerDamage);
@@ -99,6 +100,8 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
   // equipping items don't require a turn
 
   const handleToggleEquip = (item: Equipment) => {
+    if (isBusy) return;
+
     const isAlreadyEquipped = equipped.some((e) => e.name === item.name);
 
     if (isAlreadyEquipped) {
@@ -116,7 +119,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
 
   // Healing takes up a "turn" -- boss heals to full as well.
   const handleHeal = () => {
-    if (battleOver) return;
+    if (battleOver || isBusy) return;
     const healAmount = 10;
     const nextHp = Math.min(maxPlayerHp, playerHp + healAmount);
     setPlayerHp(nextHp);
@@ -133,6 +136,11 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
     );
   };
   const handleRetry = () => {
+    if (messageTimeoutRef.current) {
+      clearTimeout(messageTimeoutRef.current);
+      messageTimeoutRef.current = null;
+    }
+    setIsBusy(false);
     setPlayerHp(maxPlayerHp);
     setBossHp(TUTORIAL_BOSS.maxHp);
     setMenuMode('main');
@@ -200,7 +208,11 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
                 </button>
               ) : (
                 <>
-                  <button className={styles.pokeBtn} onClick={handleRetry}>
+                  <button
+                    type="button"
+                    className={styles.pokeBtn}
+                    onClick={handleRetry}
+                  >
                     ▶ RETRY
                   </button>
                   <button
@@ -219,6 +231,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
                 type="button"
                 className={styles.pokeBtn}
                 style={{ borderColor: '#e63946' }}
+                disabled={isBusy}
                 onClick={handleFight}
               >
                 FIGHT
@@ -228,6 +241,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
                 className={styles.pokeBtn}
                 style={{ borderColor: '#457b9d' }}
                 onClick={() => setMenuMode('gear')}
+                disabled={isBusy}
               >
                 GEAR ({equipped.length}/{maxSlots})
               </button>
@@ -235,6 +249,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
                 type="button"
                 className={styles.pokeBtn}
                 style={{ borderColor: '#2a9d8f' }}
+                disabled={isBusy}
                 onClick={handleHeal}
               >
                 TOWEL (HEAL)
@@ -243,6 +258,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
                 type="button"
                 className={styles.pokeBtn}
                 style={{ borderColor: '#6c757d' }}
+                disabled={isBusy}
                 onClick={onExit}
               >
                 RUN
@@ -256,6 +272,7 @@ export function TutorialBattle({ onExit }: TutorialBattleProps) {
                   <button
                     type="button"
                     key={item.name}
+                    disabled={isBusy}
                     className={`${styles.pokeBtn} ${styles.gearBtn} ${
                       isEquipped ? styles.equippedBtn : ''
                     }`}
